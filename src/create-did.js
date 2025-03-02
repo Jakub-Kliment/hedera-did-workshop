@@ -4,7 +4,7 @@ const {
     Client,
     FileId
 } = require("@hashgraph/sdk");
-const { HcsDid, HcsDidCreateDidOwnerEvent } = require("@hashgraph/did-sdk-js");
+const { HcsDid } = require("@hashgraph/did-sdk-js");
 require("dotenv").config();
 
 async function createDid() {
@@ -21,7 +21,6 @@ async function createDid() {
         console.log("Operator set up properly!");
 
         const topicCreateTransaction = new TopicCreateTransaction()
-            .setMaxTransactionFee(HcsDid.TRANSACTION_FEE)
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey.publicKey)
             .freezeWith(client);
@@ -38,6 +37,7 @@ async function createDid() {
             "testnet",
             didPrivateKey.publicKey,
             FileId.fromString("0.0.102"), // Default
+            topicId
         );
 
         console.log("Registering DID...");
