@@ -1,4 +1,7 @@
-const { PrivateKey, Client } = require("@hashgraph/sdk");
+const { 
+    PrivateKey,
+    Client 
+} = require("@hashgraph/sdk");
 const { HcsDid } = require("@hashgraph/did-sdk-js");
 require("dotenv").config();
 
