@@ -32,16 +32,14 @@ async function create_did() {
 
   // Add a service (ID) to the DID document
   console.log("\nAdding service to DID...");
-  const serviceIdentifier = `${didIdentifier}#service-1`;
+  const serviceIdentifier = `${didIdentifier}#med-1`;
   await registeredDid.addService({
     id: serviceIdentifier,
     type: "PersonalInfoService",
     serviceEndpoint: {
       name: "Bob",
       surname: "Dillon",
-      birthdate: "2000-03-07",
-      nationality: "Swiss",
-      id_number: "SW1000200"
+      medicine: "XYZ"
     }
   });
   console.log("Service added successfully!");
