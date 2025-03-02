@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 import walletConnect from "./walletConnect.js";
+import createDid from "./create-did.js";
 
 import "./assets/App.css";
-
 
 function App() {
 	const [walletData, setWalletData] = useState();
@@ -12,7 +12,6 @@ function App() {
 	const [connectTextSt, setConnectTextSt] = useState("Connect here...");
 	const [createTextSt, setCreateTextSt] = useState("");
 	
-
 	const [connectLinkSt, setConnectLinkSt] = useState("");
 	
 	async function connectWallet() {
@@ -33,11 +32,21 @@ function App() {
 		}
 	}
 
+	
+	async function handleCreateDid() {
+		try {
+			
+			await createDid();
+			
+		} catch (error) {
+			
+			console.error(error);
+		}
+	}
 
 	return (
 		<div className="App">
 			<h1 className="header">Hedera Hackathon Dapp</h1>
-			
 
 			<div className="content-container">
 				<a href={connectLinkSt} target={"_blank"} rel="noreferrer"></a>
@@ -45,8 +54,15 @@ function App() {
 				<button onClick={connectWallet} className="cta-button">
 					Connect Wallet
 				</button>
+
+				{/* Add the Create DID button */}
+				<button onClick={handleCreateDid} className="cta-button">
+					Create DID
+				</button>
+				<p className="sub-text">{createTextSt}</p>
 			</div>
 		</div>
 	);
 }
+
 export default App;
