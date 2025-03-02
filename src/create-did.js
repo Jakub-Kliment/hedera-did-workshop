@@ -1,6 +1,9 @@
 const { 
     PrivateKey,
-    Client 
+    Client,
+    FileId,
+    FileCreateTransaction,
+    PublicKey
 } = require("@hashgraph/sdk");
 const { HcsDid } = require("@hashgraph/did-sdk-js");
 require("dotenv").config();
@@ -9,7 +12,7 @@ async function createDid() {
     try {
         // Setup a client for the testnet
         const operatorId = process.env.OPERATOR_ID;
-        const operatorKey = process.env.OPERATOR_KEY;
+        const operatorKey = PrivateKey.fromStringED25519(process.env.OPERATOR_KEY);
         if (!operatorId || !operatorKey) {
             throw new Error("Environment variables OPERATOR_ID or OPERATOR_KEY are not set properly!");
         }
@@ -17,12 +20,13 @@ async function createDid() {
         const client = Client.forTestnet();
         client.setOperator(operatorId, operatorKey);
         console.log("Operator set up properly!");
-
+       
         // Create a new DID
         const didPrivateKey = PrivateKey.generate();
         const did = new HcsDid({
-            privateKey: didPrivateKey,
-            client: client 
+            network: "testnet",
+            didRootKey: didPrivateKey,
+            addressBookFileId: FileId.fromString("0.0.102") // Default
         });
 
         console.log("Registering DID...");
