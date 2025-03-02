@@ -1,9 +1,10 @@
 const { 
+    TopicCreateTransaction,
     PrivateKey,
     Client,
     FileId
 } = require("@hashgraph/sdk");
-const { HcsDid } = require("@hashgraph/did-sdk-js");
+const { HcsDid, HcsDidCreateDidOwnerEvent } = require("@hashgraph/did-sdk-js");
 require("dotenv").config();
 
 async function createDid() {
@@ -18,9 +19,21 @@ async function createDid() {
         const client = Client.forTestnet();
         client.setOperator(operatorId, operatorKey);
         console.log("Operator set up properly!");
+
+        const topicCreateTransaction = new TopicCreateTransaction()
+            .setMaxTransactionFee(HcsDid.TRANSACTION_FEE)
+            .setAdminKey(operatorKey)
+            .setSubmitKey(operatorKey.publicKey)
+            .freezeWith(client);
+
+        const sigTx = await topicCreateTransaction.sign(operatorKey);
+        const txId = await sigTx.execute(client);
+        const topicId = (await txId.getReceipt(client)).topicId;
+
+        //this.identifier = this.buildIdentifier(operatorKey.publicKey);
        
         // Create a new DID
-        const didPrivateKey = PrivateKey.generate();
+        const didPrivateKey = HcsDid.generateDidRootKey();
         const did = new HcsDid(
             "testnet",
             didPrivateKey.publicKey,
@@ -28,8 +41,8 @@ async function createDid() {
         );
 
         console.log("Registering DID...");
-        const registeredDid = await did.register();
-        const didIdentifier = await registeredDid.getIdentifier();
+        const registeredDid = did.generateDidDocument();
+        const didIdentifier = did.getIdString();
         console.log("DID registered successfully!");
         console.log(`DID Identifier: ${didIdentifier}`);
 
