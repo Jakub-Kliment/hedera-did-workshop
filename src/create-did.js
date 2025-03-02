@@ -1,9 +1,7 @@
 const { 
     PrivateKey,
     Client,
-    FileId,
-    FileCreateTransaction,
-    PublicKey
+    FileId
 } = require("@hashgraph/sdk");
 const { HcsDid } = require("@hashgraph/did-sdk-js");
 require("dotenv").config();
@@ -23,11 +21,11 @@ async function createDid() {
        
         // Create a new DID
         const didPrivateKey = PrivateKey.generate();
-        const did = new HcsDid({
-            network: "testnet",
-            didRootKey: didPrivateKey,
-            addressBookFileId: FileId.fromString("0.0.102") // Default
-        });
+        const did = new HcsDid(
+            "testnet",
+            didPrivateKey.publicKey,
+            FileId.fromString("0.0.102"), // Default
+        );
 
         console.log("Registering DID...");
         const registeredDid = await did.register();
